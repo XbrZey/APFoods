@@ -1,23 +1,146 @@
 // components/mainpage/MainPage.tsx
-import React from 'react';
-import { Star, ArrowLeft, ArrowRight, Clock } from 'lucide-react';
+"use client";
 
+import React, { useEffect, useRef, useState } from 'react';
+import { Star, ArrowLeft, ArrowRight, Clock } from 'lucide-react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register ScrollTrigger plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+// Ensure you have these images or placeholders inside your public/ folder!
+// e.g. public/images/hero-salad.jpg, public/images/pizza.jpg, etc.
 const POPULAR_DISHES = [
-  { id: 1, name: 'Chinese Noodles Pasta', price: '$20.00', rating: '5.0', reviewCount: '5.6k', img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&auto=format&fit=crop&q=80' },
-  { id: 2, name: 'Vegetable Chowmein', price: '$20.00', rating: '4.9', reviewCount: '4.2k', img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&auto=format&fit=crop&q=80' },
-  { id: 3, name: 'Pasta al Pomodoro', price: '$20.00', rating: '4.8', reviewCount: '3.8k', img: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=400&auto=format&fit=crop&q=80' },
-  { id: 4, name: 'Rice and Curry', price: '$20.00', rating: '5.0', reviewCount: '6.1k', img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&auto=format&fit=crop&q=80' },
+  { id: 1, name: 'Margherita Pizza', image: '/images/pizza.jpg', price: '$18.00', rating: '4.9', reviewCount: '7.2k' },
+  { id: 2, name: 'Pasta al Pomodoro', image: '/images/pasta.jpg', price: '$20.00', rating: '4.8', reviewCount: '3.8k' },
+  { id: 3, name: 'Butter Chicken Curry', image: '/images/butter-chicken.jpg', price: '$22.00', rating: '4.9', reviewCount: '5.1k' },
+  { id: 4, name: 'Chicken Biryani', image: '/images/chicken-biryani.jpg', price: '$21.00', rating: '5.0', reviewCount: '6.1k' },
+  { id: 5, name: 'Golden Fried Rice', image: '/images/rice.jpg', price: '$16.00', rating: '4.7', reviewCount: '2.9k' },
+  { id: 6, name: 'Classic Burger', image: '/images/burger.jpg', price: '$17.00', rating: '4.8', reviewCount: '4.4k' },
 ];
 
 export default function MainPage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  // Update button disabled states based on scroll position
+  const updateScrollState = () => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  };
+
+  useEffect(() => {
+    updateScrollState();
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', updateScrollState, { passive: true });
+    window.addEventListener('resize', updateScrollState);
+    return () => {
+      el.removeEventListener('scroll', updateScrollState);
+      window.removeEventListener('resize', updateScrollState);
+    };
+  }, []);
+
+  const scrollDishes = (direction: 1 | -1) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollBy({ left: direction * el.clientWidth * 0.85, behavior: 'smooth' });
+  };
+
+  // --- COOL GSAP ANIMATIONS ---
+  useGSAP(() => {
+    // 1. Cinematic Hero Left-Side Entrance
+    gsap.from('.hero-text > *', {
+      x: -50,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.15,
+      ease: 'power4.out'
+    });
+
+    // 2. Dynamic 3D Hero Right-Side Entrance
+    const heroTl = gsap.timeline({ defaults: { ease: 'elastic.out(1, 0.75)', duration: 1.2 } });
+    heroTl.from('.hero-photo-wrapper', { scale: 0, rotation: -15, delay: 0.2 })
+          .from('.hero-ring', { scale: 1.4, opacity: 0, duration: 1.5 }, '-=1')
+          .from('.hero-badge', { scale: 0, rotation: 45 }, '-=0.8')
+          .from('.hero-float-card', { y: 60, x: -30, opacity: 0 }, '-=0.8');
+
+    // Continuous floating effect for the float card
+    gsap.to('.hero-float-card', {
+      y: '+=10',
+      duration: 2,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    });
+
+    // 3. ScrollTriggered Stagger Reveal for Popular Dishes Section
+    gsap.from('.dishes-section-header', {
+      scrollTrigger: {
+        trigger: '.dishes-section-header',
+        start: 'top 85%',
+      },
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out'
+    });
+
+    gsap.from('.dish-card', {
+      scrollTrigger: {
+        trigger: '.dish-card-container',
+        start: 'top 80%',
+      },
+      scale: 0.8,
+      opacity: 0,
+      y: 50,
+      duration: 0.7,
+      stagger: 0.1,
+      ease: 'back.out(1.2)'
+    });
+
+  }, { scope: containerRef });
+
+  // Cool Hover Tilt Effect via GSAP
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    
+    gsap.to(card, {
+      rotateX: -y * 0.15,
+      rotateY: x * 0.15,
+      transformPerspective: 1000,
+      duration: 0.3,
+      ease: 'power2.out'
+    });
+  };
+
+  const handleCardMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    gsap.to(e.currentTarget, {
+      rotateX: 0,
+      rotateY: 0,
+      duration: 0.5,
+      ease: 'power2.out'
+    });
+  };
+
   return (
-    <main className="w-full max-w-7xl mx-auto px-6 py-8 space-y-28">
-      
-     
+    <main ref={containerRef} className="w-full max-w-7xl mx-auto px-6 py-8 space-y-28 overflow-hidden">
+
+      {/* Hero Section */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative pt-4">
         
-        
-        <div className="space-y-6 max-w-xl z-10">
+        <div className="hero-text space-y-6 max-w-xl z-10">
           <span className="text-orange-500 font-bold tracking-wider text-xs uppercase bg-orange-50 px-3 py-1.5 rounded-full inline-block">
             Welcome to Foodie
           </span>
@@ -28,12 +151,12 @@ export default function MainPage() {
           <p className="text-neutral-500 leading-relaxed text-sm md:text-base">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum convallis ante ante, ut tempor neque bibendum non. Ut enim lacus, auctor nec convallis sed, vehicula ut eros.
           </p>
-          
+
           <div className="flex flex-wrap gap-4 pt-2">
-            <button className="bg-orange-500 text-white px-8 py-3.5 rounded-xl font-semibold shadow-lg shadow-orange-500/20 hover:bg-orange-600 hover:shadow-orange-600/30 transition-all text-sm">
+            <button type="button" className="bg-orange-500 text-white px-8 py-3.5 rounded-xl font-semibold shadow-lg shadow-orange-500/20 hover:bg-orange-600 hover:shadow-orange-600/30 transition-all text-sm">
               Reserve a Table
             </button>
-            <button className="border-2 border-neutral-200 text-neutral-700 px-8 py-3.5 rounded-xl font-semibold hover:bg-neutral-50 transition-all text-sm">
+            <button type="button" className="border-2 border-neutral-200 text-neutral-700 px-8 py-3.5 rounded-xl font-semibold hover:bg-neutral-50 transition-all text-sm">
               Online Order
             </button>
           </div>
@@ -44,77 +167,89 @@ export default function MainPage() {
           </div>
         </div>
 
-      
         <div className="relative flex justify-center items-center">
-          
-          <div className="absolute w-[340px] h-[340px] sm:w-[450px] sm:h-[450px] rounded-full border-2 border-dashed border-orange-200/60 animate-[spin_100s_linear_infinite]"></div>
-          
-          
-          <div className="relative w-[290px] h-[290px] sm:w-[380px] sm:h-[380px] rounded-full overflow-hidden shadow-2xl border-8 border-white bg-white">
-            <img 
-              src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&fit=crop&q=80" 
-              alt="Premium Salad Platter"
-              className="w-full h-full object-cover object-center"
+          {/* Animated background dotted circle */}
+          <div className="hero-ring absolute w-[340px] h-[340px] sm:w-[450px] sm:h-[450px] rounded-full border-2 border-dashed border-orange-200/60 animate-[spin_120s_linear_infinite]"></div>
+
+          {/* Core Hero Photo Container */}
+          <div className="hero-photo-wrapper relative w-[290px] h-[290px] sm:w-[380px] sm:h-[380px] rounded-full overflow-hidden shadow-2xl border-8 border-white bg-neutral-100">
+            <img
+              src="/images/freshvegeta.jpg" 
+              alt="Fresh vegetable salad bowl"
+              className="w-full h-full object-cover object-center transform hover:scale-110 transition-transform duration-700"
             />
-            <span className="absolute top-6 right-6 bg-neutral-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg tracking-wider uppercase">
-              Best Seller ✨
-            </span>
           </div>
 
-          
-          <div className="absolute bottom-2 -left-2 sm:left-6 bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-neutral-100 max-w-[210px] flex items-center gap-3 transition-transform hover:-translate-y-1">
-            <img 
-              src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=100&auto=format&fit=crop&q=80" 
-              alt="Salad thumbnail" 
+          {/* Floating Widget Card */}
+          <div className="hero-float-card absolute bottom-2 -left-2 sm:left-6 bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-neutral-100 max-w-[210px] flex items-center gap-3">
+            <img
+              src="/images/hero-salad.jpg" 
+              alt="Fresh vegetable salad, close up"
               className="w-12 h-12 rounded-xl object-cover"
             />
             <div>
-              <h4 className="text-xs font-bold text-neutral-800">Salman Salad</h4>
+              <h4 className="text-xs font-bold text-neutral-800">Garden Salad</h4>
               <div className="flex gap-0.5 my-0.5">
                 {[...Array(5)].map((_, i) => <Star key={i} size={10} fill="#f97316" color="#f97316" />)}
               </div>
-              <p className="text-xs font-black text-neutral-900">$12.00</p>
+              <p className="text-xs font-black text-neutral-900">NRP 240</p>
             </div>
           </div>
         </div>
       </section>
 
-    
+      {/* Popular Dishes Section */}
       <section className="space-y-8">
-        <div className="flex justify-between items-end">
+        <div className="dishes-section-header flex justify-between items-end">
           <div>
             <h2 className="text-3xl font-black text-neutral-900 tracking-tight">
               Our Popular <span className="text-orange-500">Dishes</span>
             </h2>
           </div>
-          
+
           <div className="flex gap-2">
-            <button className="w-10 h-10 rounded-xl border border-neutral-200 flex items-center justify-center text-neutral-600 hover:bg-neutral-50 transition-all">
+            <button
+              type="button"
+              aria-label="Scroll dishes left"
+              disabled={!canScrollLeft}
+              onClick={() => scrollDishes(-1)}
+              className="w-10 h-10 rounded-xl border border-neutral-200 flex items-center justify-center text-neutral-600 hover:bg-neutral-50 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            >
               <ArrowLeft size={16} />
             </button>
-            <button className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-white shadow-md hover:bg-orange-600 transition-all">
+            <button
+              type="button"
+              aria-label="Scroll dishes right"
+              disabled={!canScrollRight}
+              onClick={() => scrollDishes(1)}
+              className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-white shadow-md hover:bg-orange-600 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            >
               <ArrowRight size={16} />
             </button>
           </div>
         </div>
 
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Scrollable Container */}
+        <div
+          ref={scrollerRef}
+          className="dish-card-container flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           {POPULAR_DISHES.map((dish) => (
-            <div key={dish.id} className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-neutral-100 text-center relative group flex flex-col items-center">
-              
-             
+            <div
+              key={dish.id}
+              onMouseMove={handleCardMouseMove}
+              onMouseLeave={handleCardMouseLeave}
+              className="dish-card snap-start shrink-0 w-[calc(50%-0.75rem)] sm:w-[220px] bg-white rounded-2xl p-4 shadow-sm hover:shadow-2xl transition-shadow border border-neutral-100 text-center relative group flex flex-col items-center will-change-transform"
+            >
               <div className="absolute top-3 right-3 flex items-center gap-1 text-[11px] font-bold text-neutral-600 bg-neutral-50 px-2 py-1 rounded-lg">
                 <Star size={12} fill="#f97316" color="#f97316" />
                 <span>{dish.rating} <span className="text-neutral-400 font-normal">({dish.reviewCount})</span></span>
               </div>
 
-             
-              <div className="w-36 h-36 rounded-full overflow-hidden my-6 border-4 border-neutral-50 shadow-inner group-hover:scale-105 transition-transform duration-300">
-                <img src={dish.img} alt={dish.name} className="w-full h-full object-cover" />
+              <div className="w-36 h-36 rounded-full overflow-hidden my-6 border-4 border-neutral-50 shadow-inner group-hover:scale-105 transition-transform duration-300 bg-neutral-100">
+                <img src={dish.image} alt={dish.name} loading="lazy" className="w-full h-full object-cover" />
               </div>
 
-              
               <h3 className="font-bold text-neutral-800 text-sm mb-1 line-clamp-1">{dish.name}</h3>
               <p className="text-orange-500 font-extrabold text-sm mt-auto pt-2">{dish.price}</p>
             </div>

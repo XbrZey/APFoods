@@ -22,7 +22,7 @@ export default function NavMenue() {
             <UtensilsCrossed size={18} />
           </div>
           <span className="text-xl font-black text-neutral-800 tracking-tight">
-            Foodie
+            APFoods
           </span>
         </Link>
 
