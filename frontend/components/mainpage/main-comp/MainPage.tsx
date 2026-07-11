@@ -1,4 +1,3 @@
-// components/mainpage/MainPage.tsx
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -7,20 +6,16 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Register ScrollTrigger plugin
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
-
-// Ensure you have these images or placeholders inside your public/ folder!
-// e.g. public/images/hero-salad.jpg, public/images/pizza.jpg, etc.
 const POPULAR_DISHES = [
-  { id: 1, name: 'Margherita Pizza', image: '/images/pizza.jpg', price: '$18.00', rating: '4.9', reviewCount: '7.2k' },
-  { id: 2, name: 'Pasta al Pomodoro', image: '/images/pasta.jpg', price: '$20.00', rating: '4.8', reviewCount: '3.8k' },
-  { id: 3, name: 'Butter Chicken Curry', image: '/images/butter-chicken.jpg', price: '$22.00', rating: '4.9', reviewCount: '5.1k' },
-  { id: 4, name: 'Chicken Biryani', image: '/images/chicken-biryani.jpg', price: '$21.00', rating: '5.0', reviewCount: '6.1k' },
-  { id: 5, name: 'Golden Fried Rice', image: '/images/rice.jpg', price: '$16.00', rating: '4.7', reviewCount: '2.9k' },
-  { id: 6, name: 'Classic Burger', image: '/images/burger.jpg', price: '$17.00', rating: '4.8', reviewCount: '4.4k' },
+  { id: 1, name: 'Margherita Pizza', image: '/images/pizza.jpg', price: 'Rs.18.00', rating: '4.9', reviewCount: '7.2k' },
+  { id: 2, name: 'Pasta al Pomodoro', image: '/images/pasta.jpg', price: 'Rs.20.00', rating: '4.8', reviewCount: '3.8k' },
+  { id: 3, name: 'Butter Chicken Curry', image: '/images/butter-chicken.jpg', price: 'Rs.22.00', rating: '4.9', reviewCount: '5.1k' },
+  { id: 4, name: 'Chicken Biryani', image: '/images/chicken-biryani.jpg', price: 'Rs.21.00', rating: '5.0', reviewCount: '6.1k' },
+  { id: 5, name: 'Golden Fried Rice', image: '/images/rice.jpg', price: 'Rs.16.00', rating: '4.7', reviewCount: '2.9k' },
+  { id: 6, name: 'Classic Burger', image: '/images/burger.jpg', price: 'Rs.17.00', rating: '4.8', reviewCount: '4.4k' },
 ];
 
 export default function MainPage() {
@@ -29,7 +24,6 @@ export default function MainPage() {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  // Update button disabled states based on scroll position
   const updateScrollState = () => {
     const el = scrollerRef.current;
     if (!el) return;
@@ -55,9 +49,8 @@ export default function MainPage() {
     el.scrollBy({ left: direction * el.clientWidth * 0.85, behavior: 'smooth' });
   };
 
-  // --- COOL GSAP ANIMATIONS ---
   useGSAP(() => {
-    // 1. Cinematic Hero Left-Side Entrance
+  
     gsap.from('.hero-text > *', {
       x: -50,
       opacity: 0,
@@ -66,14 +59,14 @@ export default function MainPage() {
       ease: 'power4.out'
     });
 
-    // 2. Dynamic 3D Hero Right-Side Entrance
+    
     const heroTl = gsap.timeline({ defaults: { ease: 'elastic.out(1, 0.75)', duration: 1.2 } });
     heroTl.from('.hero-photo-wrapper', { scale: 0, rotation: -15, delay: 0.2 })
           .from('.hero-ring', { scale: 1.4, opacity: 0, duration: 1.5 }, '-=1')
           .from('.hero-badge', { scale: 0, rotation: 45 }, '-=0.8')
           .from('.hero-float-card', { y: 60, x: -30, opacity: 0 }, '-=0.8');
 
-    // Continuous floating effect for the float card
+    
     gsap.to('.hero-float-card', {
       y: '+=10',
       duration: 2,
@@ -82,7 +75,7 @@ export default function MainPage() {
       ease: 'sine.inOut'
     });
 
-    // 3. ScrollTriggered Stagger Reveal for Popular Dishes Section
+
     gsap.from('.dishes-section-header', {
       scrollTrigger: {
         trigger: '.dishes-section-header',
@@ -109,7 +102,7 @@ export default function MainPage() {
 
   }, { scope: containerRef });
 
-  // Cool Hover Tilt Effect via GSAP
+  
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
@@ -144,12 +137,12 @@ export default function MainPage() {
           <span className="text-orange-500 font-bold tracking-wider text-xs uppercase bg-orange-50 px-3 py-1.5 rounded-full inline-block">
             Welcome to Foodie
           </span>
-          <h1 className="text-5xl md:text-6xl font-black text-neutral-900 leading-[1.15]">
-            Foodie Restaurant <br />
-            and Enjoy <span className="text-orange-500 relative inline-block after:absolute after:bottom-1 after:left-0 after:w-full after:h-2 after:bg-orange-100 after:-z-10">The Food</span>
+          <h1 className="text-4xl md:text-6xl font-black text-neutral-900 leading-[1.15]">
+            APFoods Awesome &
+            Delicious <span className="text-orange-500 relative inline-block after:absolute after:bottom-1 after:left-0 after:w-full after:h-2 after:bg-orange-100 after:-z-10">Food</span>
           </h1>
           <p className="text-neutral-500 leading-relaxed text-sm md:text-base">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum convallis ante ante, ut tempor neque bibendum non. Ut enim lacus, auctor nec convallis sed, vehicula ut eros.
+            
           </p>
 
           <div className="flex flex-wrap gap-4 pt-2">
@@ -157,7 +150,7 @@ export default function MainPage() {
               Reserve a Table
             </button>
             <button type="button" className="border-2 border-neutral-200 text-neutral-700 px-8 py-3.5 rounded-xl font-semibold hover:bg-neutral-50 transition-all text-sm">
-              Online Order
+              Contact Us
             </button>
           </div>
 

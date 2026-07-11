@@ -1,4 +1,3 @@
-// components/menu/MainMenu.tsx
 "use client";
 
 import React, { useState, useMemo, useRef } from 'react';
@@ -19,35 +18,33 @@ type MenuItem = {
   category: string;
   price: string;
   rating: string;
-  img: string; // Direct local paths pointing to your public folder
+  img: string;
   tags: string[];
 };
 
-// Make sure to drop your images into your public folder matching these paths!
-// e.g., public/images/menu/momo-jhol.jpg
 const MENU_ITEMS: MenuItem[] = [
-  // MOMO
+  
   { id: 1, name: 'Steam Jhol Buff Momo', category: 'Momo', price: 'Rs. 280', rating: '5.0', img: '/images/menu/momo-jhol.jpg', tags: ['dumplings', 'jhol', 'buff', 'soup'] },
   { id: 2, name: 'Crunchy Kothey Chicken Momo', category: 'Momo', price: 'Rs. 320', rating: '4.9', img: '/images/menu/momo-kothey.jpg', tags: ['fried', 'chicken', 'dumplings', 'kothey'] },
   { id: 3, name: 'Vegetable Steam Momo', category: 'Momo', price: 'Rs. 250', rating: '4.7', img: '/images/menu/momo-veg.jpg', tags: ['veg', 'steamed', 'dumplings', 'healthy'] },
 
-  // MAIN COURSE
+  
   { id: 4, name: 'Premium Thakali Khana Set', category: 'Main Course', price: 'Rs. 650', rating: '4.9', img: '/images/menu/thakali-set.jpg', tags: ['thali', 'dal bhat', 'rice', 'tarkari', 'nepali'] },
   { id: 5, name: 'Traditional Newari Samay Baji', category: 'Main Course', price: 'Rs. 550', rating: '4.8', img: '/images/menu/samay-baji.jpg', tags: ['newari', 'khaja', 'set', 'spicy'] },
   { id: 6, name: 'Chicken Chowmein', category: 'Main Course', price: 'Rs. 300', rating: '4.6', img: '/images/menu/chowmein.jpg', tags: ['noodles', 'stir fry', 'chicken', 'chinese'] },
   { id: 7, name: 'Mutton Curry with Rice', category: 'Main Course', price: 'Rs. 480', rating: '4.7', img: '/images/menu/mutton-rice.jpg', tags: ['curry', 'meat', 'gravy', 'lunch'] },
 
-  // APPETIZERS
+  
   { id: 8, name: 'Spicy Sukuti Sadheko', category: 'Appetizers', price: 'Rs. 350', rating: '4.8', img: '/images/menu/sukuti.jpg', tags: ['meat', 'dried', 'jerky', 'chilly', 'hot'] },
   { id: 9, name: 'Crispy Aloo Nimki Platter', category: 'Appetizers', price: 'Rs. 220', rating: '4.6', img: '/images/menu/aloo-nimki.jpg', tags: ['potato', 'snack', 'crispy', 'aloo'] },
   { id: 10, name: 'Chicken Pakoda', category: 'Appetizers', price: 'Rs. 260', rating: '4.7', img: '/images/menu/pakoda.jpg', tags: ['fritters', 'fried', 'chicken', 'crunchy'] },
 
-  // DESSERTS
+  
   { id: 11, name: 'Newari Yomari (Chaku/Khoya)', category: 'Desserts', price: 'Rs. 180', rating: '4.7', img: '/images/menu/yomari.jpg', tags: ['sweet', 'rice flour', 'chaku', 'festival'] },
   { id: 12, name: 'Sweet Lalmohan with Ice Cream', category: 'Desserts', price: 'Rs. 240', rating: '4.9', img: '/images/menu/lalmohan.jpg', tags: ['gulab jamun', 'dessert', 'vanilla'] },
   { id: 13, name: 'Sel Roti Combo', category: 'Desserts', price: 'Rs. 150', rating: '4.5', img: '/images/menu/sel-roti.jpg', tags: ['donut', 'rice', 'sweet', 'fried'] },
 
-  // BEVERAGES
+  
   { id: 14, name: 'Himalayan Spiced Milk Tea', category: 'Beverages', price: 'Rs. 120', rating: '5.0', img: '/images/menu/chiya.jpg', tags: ['chai', 'tea', 'masala', 'hot'] },
   { id: 15, name: 'Sweet Mango Lassi', category: 'Beverages', price: 'Rs. 180', rating: '4.9', img: '/images/menu/lassi.jpg', tags: ['yogurt', 'shake', 'drink', 'mango'] },
   { id: 16, name: 'Black Filter Coffee', category: 'Beverages', price: 'Rs. 140', rating: '4.6', img: '/images/menu/coffee.jpg', tags: ['caffeine', 'hot', 'espresso'] },
@@ -56,7 +53,7 @@ const MENU_ITEMS: MenuItem[] = [
 function MenuCard({ item }: { item: MenuItem }) {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Smooth 3D Hover Tilt Effect
+  
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
@@ -129,7 +126,7 @@ export default function MainMenu() {
   const [query, setQuery] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Advanced search handling text values and tag sets
+
   const filteredItems = useMemo(() => {
     const cleanQuery = query.trim().toLowerCase();
     return MENU_ITEMS.filter((item) => {
@@ -141,12 +138,12 @@ export default function MainMenu() {
   }, [activeCategory, query]);
 
   useGSAP(() => {
-    // Elegant Header Reveal Sequential Timeline
+    
     const tl = gsap.timeline({ defaults: { ease: 'power4.out', duration: 1 } });
     tl.from('.menu-header-item', { y: 30, opacity: 0, stagger: 0.15 })
       .from('.menu-filter-pill', { scale: 0.9, opacity: 0, stagger: 0.04, ease: 'back.out(1.5)' }, '-=0.6');
 
-    // Smooth ScrollTrigger cascade for item grid display
+    
     gsap.from('.menu-card', {
       scrollTrigger: {
         trigger: '.menu-grid-container',
@@ -164,7 +161,7 @@ export default function MainMenu() {
   return (
     <main ref={containerRef} className="w-full max-w-7xl mx-auto px-6 py-12 space-y-12 select-none">
       
-      {/* Header Titles */}
+      
       <div className="text-center max-w-xl mx-auto space-y-4">
         <span className="menu-header-item text-orange-500 font-bold tracking-wider text-xs uppercase bg-orange-50 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
           <Sparkles size={12} /> Authentic Himalayan Flavors
@@ -177,7 +174,7 @@ export default function MainMenu() {
         </p>
       </div>
 
-      {/* Robust Search Utility */}
+    
       <div className="menu-header-item max-w-md mx-auto relative group">
         <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-orange-500 transition-colors" />
         <input
@@ -199,7 +196,7 @@ export default function MainMenu() {
         )}
       </div>
 
-      {/* Category Tabs */}
+      
       <div className="flex flex-wrap justify-center items-center gap-2.5 max-w-3xl mx-auto">
         {CATEGORIES.map((cat) => (
           <button
@@ -217,7 +214,7 @@ export default function MainMenu() {
         ))}
       </div>
 
-      {/* Dynamic Results Grid */}
+      
       <div className="menu-grid-container min-h-[400px] pt-4">
         {filteredItems.length > 0 ? (
           <div key={`${activeCategory}-${query}`} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
