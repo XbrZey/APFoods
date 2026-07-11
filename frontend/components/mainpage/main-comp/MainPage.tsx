@@ -10,12 +10,12 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 const POPULAR_DISHES = [
-  { id: 1, name: 'Margherita Pizza', image: '/images/pizza.jpg', price: 'Rs.18.00', rating: '4.9', reviewCount: '7.2k' },
-  { id: 2, name: 'Pasta al Pomodoro', image: '/images/pasta.jpg', price: 'Rs.20.00', rating: '4.8', reviewCount: '3.8k' },
-  { id: 3, name: 'Butter Chicken Curry', image: '/images/butter-chicken.jpg', price: 'Rs.22.00', rating: '4.9', reviewCount: '5.1k' },
-  { id: 4, name: 'Chicken Biryani', image: '/images/chicken-biryani.jpg', price: 'Rs.21.00', rating: '5.0', reviewCount: '6.1k' },
-  { id: 5, name: 'Golden Fried Rice', image: '/images/rice.jpg', price: 'Rs.16.00', rating: '4.7', reviewCount: '2.9k' },
-  { id: 6, name: 'Classic Burger', image: '/images/burger.jpg', price: 'Rs.17.00', rating: '4.8', reviewCount: '4.4k' },
+  { id: 1, name: 'Margherita Pizza', image: '/images/pizza.jpg', price: 'Rs.180.00', rating: '4.9', reviewCount: '7.2k' },
+  { id: 2, name: 'Pasta al Pomodoro', image: '/images/pasta.jpg', price: 'Rs.200.00', rating: '4.8', reviewCount: '3.8k' },
+  { id: 3, name: 'Butter Chicken Curry', image: '/images/butter-chicken.jpg', price: 'Rs.220.00', rating: '4.9', reviewCount: '5.1k' },
+  { id: 4, name: 'Chicken Biryani', image: '/images/chicken-biryani.jpg', price: 'Rs.210.00', rating: '5.0', reviewCount: '6.1k' },
+  { id: 5, name: 'Golden Fried Rice', image: '/images/rice.jpg', price: 'Rs.160.00', rating: '4.7', reviewCount: '2.9k' },
+  { id: 6, name: 'Classic Burger', image: '/images/burger.jpg', price: 'Rs.170.00', rating: '4.8', reviewCount: '4.4k' },
 ];
 
 export default function MainPage() {
@@ -130,7 +130,7 @@ export default function MainPage() {
   return (
     <main ref={containerRef} className="w-full max-w-7xl mx-auto px-6 py-8 space-y-28 overflow-hidden">
 
-      {/* Hero Section */}
+      
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative pt-4">
         
         <div className="hero-text space-y-6 max-w-xl z-10">
@@ -161,10 +161,10 @@ export default function MainPage() {
         </div>
 
         <div className="relative flex justify-center items-center">
-          {/* Animated background dotted circle */}
+          
           <div className="hero-ring absolute w-[340px] h-[340px] sm:w-[450px] sm:h-[450px] rounded-full border-2 border-dashed border-orange-200/60 animate-[spin_120s_linear_infinite]"></div>
 
-          {/* Core Hero Photo Container */}
+          
           <div className="hero-photo-wrapper relative w-[290px] h-[290px] sm:w-[380px] sm:h-[380px] rounded-full overflow-hidden shadow-2xl border-8 border-white bg-neutral-100">
             <img
               src="/images/freshvegeta.jpg" 
@@ -173,7 +173,7 @@ export default function MainPage() {
             />
           </div>
 
-          {/* Floating Widget Card */}
+          
           <div className="hero-float-card absolute bottom-2 -left-2 sm:left-6 bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-neutral-100 max-w-[210px] flex items-center gap-3">
             <img
               src="/images/hero-salad.jpg" 
@@ -191,7 +191,7 @@ export default function MainPage() {
         </div>
       </section>
 
-      {/* Popular Dishes Section */}
+     
       <section className="space-y-8">
         <div className="dishes-section-header flex justify-between items-end">
           <div>
