@@ -1,7 +1,7 @@
 import React from 'react'
-import FooterMain from './mainpage/FooterMain'
-import MainPage from './mainpage/MainPage'
-import NavMain from './mainpage/NavMain'
+import FooterMain from './main-comp/FooterMain'
+import MainPage from './main-comp/MainPage'
+import NavMain from './main-comp/NavMain'
 
 function MainDump() {
   return (

@@ -1,15 +1,20 @@
-// components/mainpage/NavMain.tsx
+"use client";
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { UtensilsCrossed, Search, ShoppingBag, Heart } from 'lucide-react';
 
-export default function NavMain() {
+export default function MainMenue() {
+  const pathname = usePathname();
+
+  // Helper function to check if a link is active
+  const isActive = (path: string) => pathname === path;
+
   return (
     <header className="sticky top-0 z-50 w-full px-6 py-4">
-    
       <nav className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between rounded-2xl bg-white/40 backdrop-blur-md border border-white/40 shadow-lg shadow-neutral-100/20">
         
-       
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
           <div className="bg-orange-500 p-2 rounded-xl text-white group-hover:scale-105 transition-transform">
             <UtensilsCrossed size={18} />
@@ -19,15 +24,35 @@ export default function NavMain() {
           </span>
         </Link>
 
-      
+        {/* Dynamic Nav Links */}
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-600">
-          <Link href="/" className="text-orange-500 font-semibold relative after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-orange-500">Home</Link>
-          <Link href="/menue" className="hover:text-orange-500 transition-colors">Menu</Link>
-          <Link href="/reserve" className="hover:text-orange-500 transition-colors">Reservation</Link>
-          <Link href="/contact" className="hover:text-orange-500 transition-colors">Contact</Link>
+          <Link 
+            href="/" 
+            className={`transition-colors relative pb-1 ${isActive('/') ? 'text-orange-500 font-semibold after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-orange-500' : 'hover:text-orange-500'}`}
+          >
+            Home
+          </Link>
+          <Link 
+            href="/menue" 
+            className={`transition-colors relative pb-1 ${isActive('/menue') ? 'text-orange-500 font-semibold after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-orange-500' : 'hover:text-orange-500'}`}
+          >
+            Menu
+          </Link>
+          <Link 
+            href="/reserve" 
+            className={`transition-colors relative pb-1 ${isActive('/reserve') ? 'text-orange-500 font-semibold after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-orange-500' : 'hover:text-orange-500'}`}
+          >
+            Reservation
+          </Link>
+          <Link 
+            href="/contact" 
+            className={`transition-colors relative pb-1 ${isActive('/contact') ? 'text-orange-500 font-semibold after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-orange-500' : 'hover:text-orange-500'}`}
+          >
+            Contact
+          </Link>
         </div>
 
-        
+        {/* Action Buttons */}
         <div className="flex items-center gap-3">
           <button className="p-2 text-neutral-600 hover:text-orange-500 transition-colors rounded-lg hover:bg-white/50" aria-label="Search">
             <Search size={18} />

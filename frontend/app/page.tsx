@@ -1,4 +1,4 @@
-import MainDump from '@/components/MainDump'
+import MainDump from '@/components/mainpage/MainDump'
 import React from 'react'
 
 function page() {

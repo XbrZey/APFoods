@@ -1,0 +1,55 @@
+# ==============================================================================
+# Dependency Directories
+# ==============================================================================
+node_modules/
+**/node_modules/
+.pnpm-store/
+
+# ==============================================================================
+# Next.js Build & Compilation Outputs
+# ==============================================================================
+.next/
+**/ .next/
+out/
+**/out/
+build/
+dist/
+
+# ==============================================================================
+# Environment Variables and Local Secrets (Strict Wildcards)
+# ==============================================================================
+# This catches .env files in the root, inside /frontend, or any future subfolders
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+
+# Allow committing an example file template if needed
+!**/.env.example
+
+# ==============================================================================
+# Debug, Logs, and System Specific Files
+# ==============================================================================
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# System Files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
