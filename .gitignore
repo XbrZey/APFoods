@@ -53,3 +53,15 @@ ehthumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Python bytecode
+**/__pycache__/
+*.pyc
+
+# Databases
+backend/sql_app.db
+*.db
+*.sqlite3
+
+# Node modules (just in case for your frontend)
+**/node_modules/
