@@ -7,9 +7,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
+    # REMOVED the trailing slash from the production Vercel URL
     allow_origins=[
         "http://localhost:3000",
-        "https://a-p-foods-resturant.vercel.app/",
+        "https://a-p-foods-resturant.vercel.app", 
     ],
     allow_credentials=True,
     allow_methods=["*"],
