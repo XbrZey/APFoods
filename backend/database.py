@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.pool import NullPool  # 💡 Import NullPool to support the Supabase pooler
 
 load_dotenv()
 
@@ -11,7 +12,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 # Otherwise, build it from individual environment variables
 if not DATABASE_URL:
     host = os.getenv("SUPABASE_DB_HOST")
-    port = os.getenv("SUPABASE_DB_PORT", "5432")
+    port = os.getenv("SUPABASE_DB_PORT", "5432")  # 💡 Stays 5432 as provided!
     name = os.getenv("SUPABASE_DB_NAME", "postgres")
     user = os.getenv("SUPABASE_DB_USER", "postgres")
     password = os.getenv("SUPABASE_PASSWORD")
@@ -31,9 +32,10 @@ if "sslmode=" not in DATABASE_URL:
     separator = "&" if "?" in DATABASE_URL else "?"
     DATABASE_URL += f"{separator}sslmode=require"
 
+# 💡 FIX: Set poolclass=NullPool so SQLAlchemy lets Supabase handle connection pooling safely
 engine = create_engine(
     DATABASE_URL,
-    pool_pre_ping=True,
+    poolclass=NullPool
 )
 
 SessionLocal = sessionmaker(
