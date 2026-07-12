@@ -62,6 +62,5 @@ ehthumbs.db
 backend/sql_app.db
 *.db
 *.sqlite3
-
 # Node modules (just in case for your frontend)
 **/node_modules/

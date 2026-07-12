@@ -222,7 +222,7 @@ export default function MainPage() {
           </div>
         </div>
 
-        {/* Scrollable Container */}
+        
         <div
           ref={scrollerRef}
           className="dish-card-container flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
