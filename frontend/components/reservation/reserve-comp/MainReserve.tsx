@@ -292,7 +292,7 @@ export default function MainReserve() {
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <label className="text-xs font-bold text-neutral-700 block">Time Slot</label>
+             
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {TIME_SLOTS.map((time) => (
                   <button

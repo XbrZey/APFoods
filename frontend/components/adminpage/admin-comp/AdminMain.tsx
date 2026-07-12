@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, CalendarCheck, ShoppingCart, LayoutDashboard, Sparkles, LogOut, ChevronRight, Phone, Calendar as CalendarIcon, Clock, Trash2, RefreshCw, User } from 'lucide-react';
+import { MessageSquare, CalendarCheck, LayoutDashboard, Sparkles, LogOut, ChevronRight, Phone, Calendar as CalendarIcon, Clock, Trash2, User, Send } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
-type AdminTab = 'messages' | 'reservations' | 'cart';
+type AdminTab = 'messages' | 'reservations';
 
 interface ReservationItem {
   id: number;
@@ -20,19 +20,10 @@ interface ReservationItem {
 
 interface MessageItem {
   id: number;
-  name: string;
-  subject: string;
-  message: string;
-}
-
-// One line item inside a customer's cart/order
-interface CartEntry {
-  id: number;
   session_id: string;
-  customer_label: string | null; // e.g. "Table 4" or a guest name, nullable
-  item_name: string;
-  price: number;
-  qty: number;
+  name: string;
+  sender: 'user' | 'admin';
+  message: string;
   created_at: string;
 }
 
@@ -40,62 +31,58 @@ export default function AdminMain() {
   const [activeTab, setActiveTab] = useState<AdminTab>('messages');
   const [reservations, setReservations] = useState<ReservationItem[]>([]);
   const [messages, setMessages] = useState<MessageItem[]>([]);
-  const [cartEntries, setCartEntries] = useState<CartEntry[]>([]);
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+  const [replyText, setReplyText] = useState('');
   const [notification, setNotification] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const socketRef = useRef<WebSocket | null>(null);
+
+  // Fallback fallback configuration definitions
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  const WS_BASE = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000';
 
   const fetchData = async (tab: AdminTab) => {
     try {
       if (tab === 'reservations') {
-        const res = await fetch('http://localhost:8000/api/reservations');
+        const res = await fetch(`${API_BASE}/api/reservations`);
         if (res.ok) setReservations(await res.json());
       } else if (tab === 'messages') {
-        const res = await fetch('http://localhost:8000/api/messages');
-        if (res.ok) setMessages(await res.json());
-      } else if (tab === 'cart') {
-        const res = await fetch('http://localhost:8000/api/cart');
-        if (res.ok) setCartEntries(await res.json());
+        const res = await fetch(`${API_BASE}/api/messages`);
+        if (res.ok) {
+          const data: MessageItem[] = await res.json();
+          setMessages(data);
+          if (data.length > 0 && !activeSessionId) {
+            setActiveSessionId(data[0].session_id);
+          }
+        }
       }
     } catch (err) {
       console.error("Data load failure:", err);
     }
   };
 
-  const handleDeleteReservation = async (id: number) => {
-    try {
-      const res = await fetch(`http://localhost:8000/api/reservations/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        setReservations(prev => prev.filter(item => item.id !== id));
-        showNotification("Reservation row purged cleanly.");
-      } else {
-        showNotification("Failed to delete entry node.");
-      }
-    } catch (err) {
-      console.error(err);
-      showNotification("Network operation exception.");
-    }
-  };
+  // --- Real-Time Connection Event Hook ---
+  useEffect(() => {
+    const ws = new WebSocket(`${WS_BASE}/api/ws/admin`);
+    socketRef.current = ws;
 
-  const handleRemoveCartEntry = async (id: number) => {
-    try {
-      const res = await fetch(`http://localhost:8000/api/cart/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        setCartEntries(prev => prev.filter(entry => entry.id !== id));
-        showNotification("Item removed from customer cart.");
-      } else {
-        showNotification("Failed to remove cart item.");
-      }
-    } catch (err) {
-      console.error(err);
-      showNotification("Network removal error.");
-    }
-  };
+    ws.onmessage = (event) => {
+      const liveMsg: MessageItem = JSON.parse(event.data);
+      setMessages((prev) => {
+        if (prev.some(m => m.id === liveMsg.id)) return prev;
+        return [...prev, liveMsg];
+      });
+    };
 
-  const showNotification = (msg: string) => {
-    setNotification(msg);
-    setTimeout(() => setNotification(null), 4000);
-  };
+    ws.onerror = (error) => {
+      console.error("WebSocket connection dropped:", error);
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, [WS_BASE]);
 
   useEffect(() => {
     fetchData(activeTab);
@@ -106,6 +93,63 @@ export default function AdminMain() {
     gsap.from('.animate-content', { x: -30, opacity: 0, duration: 0.8, ease: 'power4.out', delay: 0.1 });
   }, { scope: containerRef });
 
+  const handleDeleteReservation = async (id: number) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/reservations/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setReservations(prev => prev.filter(item => item.id !== id));
+        showNotification("Reservation row purged cleanly.");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSendReply = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!replyText.trim() || !activeSessionId) return;
+
+    const userDisplayName = messages.find(m => m.session_id === activeSessionId)?.name || "Customer";
+
+    const outgoingPayload = {
+      session_id: activeSessionId,
+      name: userDisplayName,
+      sender: 'admin' as const,
+      message: replyText
+    };
+
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify(outgoingPayload));
+      setMessages(prev => [...prev, { 
+        ...outgoingPayload, 
+        id: Date.now(), 
+        created_at: new Date().toISOString() 
+      }]);
+      setReplyText('');
+    } else {
+      try {
+        const res = await fetch(`${API_BASE}/api/messages`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(outgoingPayload)
+        });
+
+        if (res.ok) {
+          const newMsg = await res.json();
+          setMessages(prev => [...prev, newMsg]);
+          setReplyText('');
+        }
+      } catch (err) {
+        console.error("Message transmission failure:", err);
+      }
+    }
+  };
+
+  const showNotification = (msg: string) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 4000);
+  };
+
   const handleTabChange = (tab: AdminTab) => {
     setActiveTab(tab);
     gsap.fromTo('.tab-content-panel',
@@ -114,14 +158,13 @@ export default function AdminMain() {
     );
   };
 
-  const safeCartEntries = Array.isArray(cartEntries) ? cartEntries : [];
-
-  // Group flat cart entries into per-customer sessions
-  const sessions = safeCartEntries.reduce<Record<string, CartEntry[]>>((acc, entry) => {
-    acc[entry.session_id] = acc[entry.session_id] || [];
-    acc[entry.session_id].push(entry);
+  const groupedThreads = messages.reduce<Record<string, MessageItem[]>>((acc, msg) => {
+    acc[msg.session_id] = acc[msg.session_id] || [];
+    acc[msg.session_id].push(msg);
     return acc;
   }, {});
+
+  const currentChatHistory = activeSessionId ? groupedThreads[activeSessionId] || [] : [];
 
   return (
     <div ref={containerRef} className="min-h-screen w-full bg-neutral-50 flex font-['Plus_Jakarta_Sans'] select-none overflow-hidden">
@@ -135,50 +178,115 @@ export default function AdminMain() {
                 <Sparkles size={12} /> Management Console
               </span>
               <h1 className="text-3xl md:text-4xl font-black text-neutral-900 tracking-tight capitalize">
-                {activeTab === 'cart' ? 'Live Orders' : activeTab} <span className="text-orange-500">Dashboard</span>
+                {activeTab} <span className="text-orange-500">Dashboard</span>
               </h1>
             </div>
-
-            {activeTab === 'cart' && (
-              <button
-                type="button"
-                onClick={() => fetchData('cart')}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-white border border-neutral-200 text-neutral-600 hover:border-orange-300 hover:text-orange-500 transition-all shadow-sm"
-              >
-                <RefreshCw size={14} /> Refresh
-              </button>
-            )}
           </div>
 
           {notification && (
-            <div className="p-4 bg-neutral-900 text-white rounded-xl text-xs font-bold transition-all shadow-md w-fit">
+            <div className="p-4 bg-neutral-900 text-white rounded-xl text-xs font-bold shadow-md w-fit">
               {notification}
             </div>
           )}
 
-          <div className="bg-white border border-neutral-200 rounded-3xl p-6 min-h-[500px] shadow-sm flex flex-col justify-start items-stretch gap-4">
-
+          <div className="bg-white border border-neutral-200 rounded-3xl p-6 min-h-[550px] shadow-sm flex flex-col justify-start items-stretch gap-4">
+            
+            {/* MESSAGES SYSTEM */}
             {activeTab === 'messages' && (
-              messages.length === 0 ? (
+              Object.keys(groupedThreads).length === 0 ? (
                 <div className="text-center py-20 space-y-3 m-auto">
                   <MessageSquare size={32} className="mx-auto text-neutral-300" />
-                  <p className="text-neutral-400 text-sm font-medium">No messages yet.</p>
+                  <p className="text-neutral-400 text-sm font-medium">No conversation threads found.</p>
                 </div>
               ) : (
-                <div className="space-y-3">
-                  {messages.map((msg) => (
-                    <div key={msg.id} className="p-4 border border-neutral-100 bg-neutral-50/30 rounded-2xl space-y-1">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-bold text-neutral-800 text-xs">{msg.name}</h4>
-                        <span className="text-[10px] text-neutral-400 uppercase font-bold">{msg.subject}</span>
-                      </div>
-                      <p className="text-xs text-neutral-600 leading-normal">{msg.message}</p>
-                    </div>
-                  ))}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[500px]">
+                  
+                  {/* Left Sidebar Thread Selector */}
+                  <div className="border border-neutral-100 rounded-2xl overflow-y-auto p-2 space-y-1 bg-neutral-50/50">
+                    <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider px-2 block my-2">Active Conversations</span>
+                    {Object.entries(groupedThreads).map(([sessionId, msgs]) => {
+                      const latestMsg = msgs[msgs.length - 1];
+                      const isSelected = sessionId === activeSessionId;
+                      return (
+                        <button
+                          key={sessionId}
+                          type="button"
+                          onClick={() => setActiveSessionId(sessionId)}
+                          className={`w-full text-left p-3 rounded-xl flex items-center gap-3 transition-all ${
+                            isSelected ? 'bg-white border border-neutral-200 shadow-sm' : 'hover:bg-neutral-100/70'
+                          }`}
+                        >
+                          <div className="bg-orange-100 text-orange-600 p-2 rounded-lg">
+                            <User size={14} />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h4 className="font-bold text-neutral-800 text-xs truncate">{latestMsg.name}</h4>
+                            <p className="text-[11px] text-neutral-400 truncate mt-0.5">{latestMsg.message}</p>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Right Chat History Window */}
+                  <div className="md:col-span-2 border border-neutral-100 rounded-2xl flex flex-col justify-between overflow-hidden bg-white">
+                    {activeSessionId ? (
+                      <>
+                        {/* Chat Header */}
+                        <div className="p-4 border-b border-neutral-100 bg-neutral-50/40 flex items-center justify-between">
+                          <span className="text-xs font-bold text-neutral-800 flex items-center gap-1.5">
+                            Conversation Thread: <span className="text-orange-500">{currentChatHistory[0]?.name}</span>
+                          </span>
+                          <span className="text-[10px] bg-neutral-200/60 font-mono text-neutral-500 px-2 py-0.5 rounded">
+                            ID: {activeSessionId.slice(0, 8)}
+                          </span>
+                        </div>
+
+                        {/* Stream Bubble Output */}
+                        <div className="flex-1 overflow-y-auto p-4 space-y-3 flex flex-col">
+                          {currentChatHistory.map((msg) => {
+                            const isAdmin = msg.sender === 'admin';
+                            return (
+                              <div
+                                key={msg.id}
+                                className={`max-w-[75%] p-3 rounded-2xl text-xs leading-relaxed shadow-sm ${
+                                  isAdmin
+                                    ? 'bg-neutral-900 text-white rounded-br-none self-end'
+                                    : 'bg-neutral-100 text-neutral-800 rounded-bl-none self-start'
+                                }`}
+                              >
+                                <p>{msg.message}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Input Box Form */}
+                        <form onSubmit={handleSendReply} className="p-3 border-t border-neutral-100 flex items-center gap-2 bg-neutral-50/30">
+                          <input
+                            type="text"
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            placeholder="Type an official response..."
+                            className="flex-1 bg-white text-xs border border-neutral-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-400 text-neutral-800"
+                          />
+                          <button
+                            type="submit"
+                            className="p-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-colors shrink-0"
+                          >
+                            <Send size={14} />
+                          </button>
+                        </form>
+                      </>
+                    ) : (
+                      <div className="m-auto text-neutral-400 text-xs">Select a user thread to begin replying.</div>
+                    )}
+                  </div>
                 </div>
               )
             )}
 
+            {/* RESERVATIONS TABLE */}
             {activeTab === 'reservations' && (
               reservations.length === 0 ? (
                 <div className="text-center py-20 space-y-3 m-auto">
@@ -222,60 +330,6 @@ export default function AdminMain() {
                 </div>
               )
             )}
-
-            {activeTab === 'cart' && (
-              Object.keys(sessions).length === 0 ? (
-                <div className="text-center py-20 space-y-3 m-auto">
-                  <ShoppingCart size={32} className="mx-auto text-neutral-300" />
-                  <p className="text-neutral-400 text-sm font-medium">No active customer carts right now.</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                  {Object.entries(sessions).map(([sessionId, entries]) => {
-                    const sessionTotal = entries.reduce((sum, e) => sum + e.price * e.qty, 0);
-                    return (
-                      <div key={sessionId} className="border border-neutral-100 bg-neutral-50/30 rounded-2xl p-4 space-y-3">
-                        <div className="flex items-center justify-between pb-2 border-b border-neutral-200">
-                          <span className="flex items-center gap-1.5 text-xs font-bold text-neutral-700">
-                            <User size={13} className="text-orange-500" />
-                            {entries[0].customer_label || `Guest ${sessionId.slice(0, 6)}`}
-                          </span>
-                          <span className="text-[10px] font-bold text-neutral-400 uppercase">
-                            {entries.length} item{entries.length > 1 ? 's' : ''}
-                          </span>
-                        </div>
-
-                        <div className="space-y-2">
-                          {entries.map((entry) => (
-                            <div key={entry.id} className="flex items-center justify-between gap-2">
-                              <div className="min-w-0">
-                                <p className="text-xs font-bold text-neutral-800 truncate">{entry.item_name}</p>
-                                <p className="text-[11px] text-neutral-500">
-                                  Rs. {entry.price} × {entry.qty}
-                                </p>
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveCartEntry(entry.id)}
-                                aria-label={`Remove ${entry.item_name}`}
-                                className="p-1.5 text-neutral-300 hover:text-red-500 transition-colors shrink-0"
-                              >
-                                <Trash2 size={14} />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="flex items-center justify-between pt-2 border-t border-neutral-200">
-                          <span className="text-[10px] font-bold text-neutral-400 uppercase">Total</span>
-                          <span className="text-sm font-black text-neutral-900">Rs. {sessionTotal}</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )
-            )}
           </div>
 
         </div>
@@ -294,7 +348,7 @@ export default function AdminMain() {
           </div>
 
           <nav className="space-y-2">
-            {(['messages', 'reservations', 'cart'] as AdminTab[]).map((tab) => (
+            {(['messages', 'reservations'] as AdminTab[]).map((tab) => (
               <button
                 key={tab}
                 type="button"
@@ -308,8 +362,7 @@ export default function AdminMain() {
                 <div className="flex items-center gap-3">
                   {tab === 'messages' && <MessageSquare size={16} />}
                   {tab === 'reservations' && <CalendarCheck size={16} />}
-                  {tab === 'cart' && <ShoppingCart size={16} />}
-                  <span className="capitalize">{tab === 'cart' ? 'Menu Cart' : tab}</span>
+                  <span className="capitalize">{tab}</span>
                 </div>
                 <ChevronRight size={14} className={`opacity-0 group-hover:opacity-100 transition-opacity ${activeTab === tab ? 'text-white' : 'text-neutral-400'}`} />
               </button>
