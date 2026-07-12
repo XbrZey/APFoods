@@ -29,11 +29,11 @@ export default function MainContact() {
   const [liveConversation, setLiveConversation] = useState<ChatMessage[]>([]);
   const [adminReplyText, setAdminReplyText] = useState('');
 
-  // Fallback environmental definitions
+  // Environmental definitions falling back to local if undefined
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   const WS_BASE = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000';
 
-  // 1. Initialize or load an ongoing user session UUID on mount
+  // 1. Initialize session and fetch history
   useEffect(() => {
     let localSessionId = localStorage.getItem('himalayan_hub_session');
     if (!localSessionId) {
@@ -59,7 +59,7 @@ export default function MainContact() {
     };
     fetchThreadHistory();
 
-    // 2. Open Persistent WebSocket targeted directly to this unique customer session
+    // 2. Open Persistent WebSocket Targeted to production/local backend url
     const ws = new WebSocket(`${WS_BASE}/api/ws/${localSessionId}`);
     socketRef.current = ws;
 
@@ -80,7 +80,7 @@ export default function MainContact() {
     };
   }, [API_BASE, WS_BASE]);
 
-  // GSAP Entry Animations Setup
+  // GSAP Animations
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: 'power4.out', duration: 1 } });
 
@@ -92,7 +92,7 @@ export default function MainContact() {
     gsap.to('.blob-2', { scale: 1.1, x: '-=30', y: '+=20', duration: 10, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1 });
   }, { scope: containerRef });
 
-  // 3. Dispatch Initial Form over the Socket pipeline
+  // 3. Dispatch Initial Form Submission
   const handleInitialSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !messageText.trim() || !sessionId) return;
@@ -124,7 +124,7 @@ export default function MainContact() {
     }
   };
 
-  // 4. Send secondary subsequent chat lines directly through the active loop
+  // 4. Send follow-up messages
   const handleSendFollowUp = (e: React.FormEvent) => {
     e.preventDefault();
     if (!adminReplyText.trim() || !sessionId) return;
@@ -145,7 +145,6 @@ export default function MainContact() {
 
   return (
     <main ref={containerRef} className="w-full max-w-6xl mx-auto px-6 py-12 space-y-12 relative overflow-hidden select-none min-h-screen">
-      
       <div className="blob-1 absolute -top-20 -left-20 w-96 h-96 bg-orange-100/40 rounded-full blur-3xl pointer-events-none -z-10" />
       <div className="blob-2 absolute -bottom-20 -right-20 w-96 h-96 bg-amber-100/30 rounded-full blur-3xl pointer-events-none -z-10" />
 
@@ -156,54 +155,39 @@ export default function MainContact() {
         <h1 className="text-4xl md:text-5xl font-black text-neutral-900 tracking-tight leading-[1.15]">
           Connect with Our <span className="text-orange-500">Kitchen Staff</span>
         </h1>
-        <p className="text-neutral-500 text-sm sm:text-base leading-relaxed">
-          Have queries about our traditional wood-fired setups, private catering, or ingredient sourcing across Kathmandu Valley? Drop us a line!
-        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch pt-4">
-
-        {/* Contact Info Sidebar */}
+        {/* Sidebar Info */}
         <div className="lg:col-span-4 flex flex-col justify-between gap-6">
           <div className="animate-card flex-1 bg-white rounded-3xl p-6 border border-neutral-200 shadow-sm flex items-start gap-4 hover:border-orange-300 transition-colors">
-            <div className="bg-orange-50 text-orange-600 p-3 rounded-xl shrink-0">
-              <Phone size={18} />
-            </div>
+            <div className="bg-orange-50 text-orange-600 p-3 rounded-xl shrink-0"><Phone size={18} /></div>
             <div>
               <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Call the Kitchen</h4>
               <p className="text-sm font-bold text-neutral-800 mt-1">+977 (01) 4412345</p>
-              <p className="text-xs text-neutral-500 mt-0.5">Hotline: 9801234567</p>
             </div>
           </div>
 
           <div className="animate-card flex-1 bg-white rounded-3xl p-6 border border-neutral-200 shadow-sm flex items-start gap-4 hover:border-orange-300 transition-colors">
-            <div className="bg-orange-50 text-orange-600 p-3 rounded-xl shrink-0">
-              <Mail size={18} />
-            </div>
+            <div className="bg-orange-50 text-orange-600 p-3 rounded-xl shrink-0"><Mail size={18} /></div>
             <div>
               <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Catering & Events</h4>
               <p className="text-sm font-bold text-neutral-800 mt-1">namaste@foodie.com</p>
-              <p className="text-xs text-neutral-500 mt-0.5">Expect a reply within a few hours</p>
             </div>
           </div>
 
           <div className="animate-card flex-1 bg-white rounded-3xl p-6 border border-neutral-200 shadow-sm flex items-start gap-4 hover:border-orange-300 transition-colors">
-            <div className="bg-orange-50 text-orange-600 p-3 rounded-xl shrink-0">
-              <MapPin size={18} />
-            </div>
+            <div className="bg-orange-50 text-orange-600 p-3 rounded-xl shrink-0"><MapPin size={18} /></div>
             <div>
               <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Find Our Tables</h4>
               <p className="text-sm font-bold text-neutral-800 mt-1">Jhamsikhel-03, Lalitpur</p>
-              <p className="text-xs text-neutral-500 mt-0.5">Kathmandu Valley, Nepal</p>
             </div>
           </div>
         </div>
 
-        {/* Dynamic Action Interaction Panel */}
-        <div className="animate-form lg:col-span-8 bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200 shadow-xl shadow-neutral-100/40 min-h-[420px] flex flex-col">
-          
+        {/* Dynamic Panel */}
+        <div className="animate-form lg:col-span-8 bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200 shadow-xl min-h-[420px] flex flex-col">
           {!isSubmitted ? (
-            /* Layout A: Primary Contact Form Intake */
             <form onSubmit={handleInitialSubmit} className="space-y-6 h-full flex flex-col justify-between flex-1">
               <h3 className="text-lg font-black text-neutral-900 flex items-center gap-2">
                 <MessageSquare size={18} className="text-orange-500" /> Share Your Culinary Inquiry
@@ -220,7 +204,7 @@ export default function MainContact() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Aayush Shrestha"
-                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-neutral-200 text-sm text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-400 focus:bg-white transition-all bg-neutral-50/50 shadow-sm"
+                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-neutral-200 text-sm text-neutral-800 bg-neutral-50/50 shadow-sm focus:outline-none"
                     />
                   </div>
                 </div>
@@ -232,7 +216,7 @@ export default function MainContact() {
                     <select 
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
-                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-neutral-200 text-sm text-neutral-700 focus:outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-400 focus:bg-white transition-all bg-neutral-50/50 shadow-sm appearance-none"
+                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-neutral-200 text-sm text-neutral-700 bg-neutral-50/50 shadow-sm focus:outline-none appearance-none"
                     >
                       <option>Table Arrangements / Special Request</option>
                       <option>Private Hall Catering Inquiry</option>
@@ -252,35 +236,28 @@ export default function MainContact() {
                     required
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
-                    placeholder="Let us know what special menu customizations or accommodations you need..."
-                    className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-neutral-200 text-sm text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-400 focus:bg-white transition-all bg-neutral-50/50 shadow-sm resize-none"
+                    placeholder="Let us know what configuration accommodations you need..."
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-neutral-200 text-sm text-neutral-800 bg-neutral-50/50 shadow-sm resize-none focus:outline-none"
                   />
                 </div>
               </div>
 
               <div className="pt-2">
-                <button
-                  type="submit"
-                  className="w-full sm:w-auto bg-orange-500 text-white px-8 py-4 rounded-xl font-bold shadow-xl shadow-orange-500/20 hover:bg-orange-600 hover:shadow-orange-600/30 transition-all text-sm tracking-wide active:scale-[0.99]"
-                >
+                <button type="submit" className="w-full sm:w-auto bg-orange-500 text-white px-8 py-4 rounded-xl font-bold shadow-md hover:bg-orange-600 transition-all text-sm">
                   Send Message to Kitchen
                 </button>
               </div>
             </form>
           ) : (
-            /* Layout B: Real-Time Stream Conversational View */
             <div className="flex flex-col justify-between flex-1 h-full max-h-[450px]">
               <div className="border-b border-neutral-100 pb-3 flex items-center justify-between">
                 <div className="flex items-center gap-2 text-neutral-900">
                   <CheckCircle2 size={16} className="text-green-500" />
                   <span className="text-sm font-black">Live Concierge Pipeline Active</span>
                 </div>
-                <span className="text-[10px] bg-orange-50 text-orange-600 font-bold px-2 py-0.5 rounded-full">
-                  Logged as: {name}
-                </span>
+                <span className="text-[10px] bg-orange-50 text-orange-600 font-bold px-2 py-0.5 rounded-full">Logged as: {name}</span>
               </div>
 
-              {/* Chat Bubble Scrollable Stream Frame */}
               <div className="flex-1 overflow-y-auto py-4 space-y-3 flex flex-col min-h-[220px]">
                 {liveConversation.map((msg, idx) => {
                   const isUser = msg.sender === 'user';
@@ -288,9 +265,7 @@ export default function MainContact() {
                     <div
                       key={idx}
                       className={`max-w-[80%] p-3 rounded-2xl text-xs leading-relaxed shadow-sm ${
-                        isUser
-                          ? 'bg-orange-500 text-white rounded-br-none self-end'
-                          : 'bg-neutral-100 text-neutral-800 rounded-bl-none self-start'
+                        isUser ? 'bg-orange-500 text-white rounded-br-none self-end' : 'bg-neutral-100 text-neutral-800 rounded-bl-none self-start'
                       }`}
                     >
                       <p>{msg.message}</p>
@@ -299,7 +274,6 @@ export default function MainContact() {
                 })}
               </div>
 
-              {/* Live Thread Chat Form Input */}
               <form onSubmit={handleSendFollowUp} className="flex items-center gap-2 pt-2 border-t border-neutral-100">
                 <input
                   type="text"
@@ -307,19 +281,15 @@ export default function MainContact() {
                   value={adminReplyText}
                   onChange={(e) => setAdminReplyText(e.target.value)}
                   placeholder="Type an additional message directly to our staff..."
-                  className="flex-1 bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-orange-400 text-neutral-800"
+                  className="flex-1 bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 text-xs focus:outline-none text-neutral-800"
                 />
-                <button
-                  type="submit"
-                  className="bg-neutral-900 hover:bg-neutral-800 text-white p-3 rounded-xl transition-colors font-bold text-xs"
-                >
+                <button type="submit" className="bg-neutral-900 hover:bg-neutral-800 text-white p-3 rounded-xl transition-colors text-xs font-bold">
                   Send
                 </button>
               </form>
             </div>
           )}
         </div>
-
       </div>
     </main>
   );
