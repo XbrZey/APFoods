@@ -5,6 +5,7 @@ import { Star, ArrowLeft, ArrowRight, Clock } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Link from 'next/link';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -135,7 +136,7 @@ export default function MainPage() {
         
         <div className="hero-text space-y-6 max-w-xl z-10">
           <span className="text-orange-500 font-bold tracking-wider text-xs uppercase bg-orange-50 px-3 py-1.5 rounded-full inline-block">
-            Welcome to Foodie
+            Welcome to APFoods
           </span>
           <h1 className="text-4xl md:text-6xl font-black text-neutral-900 leading-[1.15]">
             APFoods Awesome &
@@ -145,14 +146,21 @@ export default function MainPage() {
             
           </p>
 
-          <div className="flex flex-wrap gap-4 pt-2">
-            <button type="button" className="bg-orange-500 text-white px-8 py-3.5 rounded-xl font-semibold shadow-lg shadow-orange-500/20 hover:bg-orange-600 hover:shadow-orange-600/30 transition-all text-sm">
-              Reserve a Table
-            </button>
-            <button type="button" className="border-2 border-neutral-200 text-neutral-700 px-8 py-3.5 rounded-xl font-semibold hover:bg-neutral-50 transition-all text-sm">
-              Contact Us
-            </button>
-          </div>
+<div className="flex flex-wrap gap-4 pt-2">
+  <Link 
+    href="/reserve" 
+    className="bg-orange-500 text-white px-8 py-3.5 rounded-xl font-semibold shadow-lg shadow-orange-500/20 hover:bg-orange-600 hover:shadow-orange-600/30 transition-all text-sm block text-center"
+  >
+    Reserve a Table
+  </Link>
+  
+  <Link 
+    href="/contact" 
+    className="border-2 border-neutral-200 text-neutral-700 px-8 py-3.5 rounded-xl font-semibold hover:bg-neutral-50 transition-all text-sm block text-center"
+  >
+    Contact Us
+  </Link>
+</div>
 
           <div className="text-xs font-medium text-neutral-500 flex items-center gap-2 pt-2">
             <Clock size={14} className="text-orange-500" />
