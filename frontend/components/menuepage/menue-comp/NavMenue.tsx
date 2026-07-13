@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { UtensilsCrossed, Search, ShoppingBag, Heart, ShieldAlert, LogOut } from 'lucide-react';
+import { UtensilsCrossed, ShoppingBag, ShieldAlert, LogOut, Menu, X } from 'lucide-react';
 
-export default function NavMenue() {
+export default function NavContact() {
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -27,6 +28,11 @@ export default function NavMenue() {
     }
   }, [pathname]);
 
+  // Close mobile menu whenever pathname changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('token_type');
@@ -38,10 +44,11 @@ export default function NavMenue() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 w-full px-6 py-4">
-      <nav className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between rounded-2xl bg-white/40 backdrop-blur-md border border-white/40 shadow-lg shadow-neutral-100/20">
+    <header className="sticky top-0 z-50 w-full px-4 md:px-6 py-4">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between rounded-2xl bg-white/40 backdrop-blur-md border border-white/40 shadow-lg shadow-neutral-100/20">
         
-        <Link href="/" className="flex items-center gap-2 group">
+        {/* Logo Section */}
+        <Link href="/" className="flex items-center gap-2 group z-50">
           <div className="bg-orange-500 p-2 rounded-xl text-white group-hover:scale-105 transition-transform">
             <UtensilsCrossed size={18} />
           </div>
@@ -50,7 +57,8 @@ export default function NavMenue() {
           </span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-600">
+        {/* Desktop Navigation Link View (PC/Tablet Landscape) */}
+        <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-neutral-600">
           <Link href="/" className={`transition-colors relative pb-1 ${isActive('/') ? 'text-orange-500 font-semibold after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-orange-500' : 'hover:text-orange-500'}`}>Home</Link>
           <Link href="/menue" className={`transition-colors relative pb-1 ${isActive('/menue') ? 'text-orange-500 font-semibold after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-orange-500' : 'hover:text-orange-500'}`}>Menu</Link>
           <Link href="/reserve" className={`transition-colors relative pb-1 ${isActive('/reserve') ? 'text-orange-500 font-semibold after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-orange-500' : 'hover:text-orange-500'}`}>Reservation</Link>
@@ -64,21 +72,61 @@ export default function NavMenue() {
           )}
         </div>
 
-        <div className="flex items-center gap-3">
-          <button className="p-2 text-neutral-600 hover:text-orange-500 transition-colors rounded-lg hover:bg-white/50" aria-label="Search"><Search size={18} /></button>
-          <button className="p-2 text-neutral-600 hover:text-orange-500 transition-colors rounded-lg hover:bg-white/50" aria-label="Favorites"><Heart size={18} /></button>
+        {/* Action Buttons Section */}
+        <div className="flex items-center gap-1 sm:gap-3 z-50">
           <button className="p-2 text-neutral-600 hover:text-orange-500 transition-colors rounded-lg hover:bg-white/50 relative" aria-label="Cart"><ShoppingBag size={18} /></button>
           
-          {isLoggedIn ? (
-            <button onClick={handleLogout} className="bg-neutral-900 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow-sm hover:bg-red-600 transition-all ml-2 flex items-center gap-1">
-              <LogOut size={12}/> Logout
-            </button>
-          ) : (
-            <Link href="/sign" className="bg-neutral-900 text-white px-5 py-2.5 rounded-xl text-xs font-semibold shadow-sm hover:bg-neutral-800 transition-all ml-2 inline-block">
-              Sign In
-            </Link>
-          )}
+          {/* Auth Button Hidden on small mobiles to maintain clean layout space */}
+          <div className="hidden sm:block">
+            {isLoggedIn ? (
+              <button onClick={handleLogout} className="bg-neutral-900 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow-sm hover:bg-red-600 transition-all ml-1 flex items-center gap-1">
+                <LogOut size={12}/> Logout
+              </button>
+            ) : (
+              <Link href="/sign" className="bg-neutral-900 text-white px-5 py-2.5 rounded-xl text-xs font-semibold shadow-sm hover:bg-neutral-800 transition-all ml-1 inline-block">
+                Sign In
+              </Link>
+            )}
+          </div>
+
+          {/* Hamburger Menu Toggle Button for Mobile/Tablet */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 lg:hidden text-neutral-600 hover:text-orange-500 transition-colors rounded-lg hover:bg-white/50"
+            aria-label="Toggle Menu"
+          >
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
+
+        {/* Mobile & Tablet Drawer Menu Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="absolute top-full left-0 right-0 mt-2 mx-4 md:mx-6 p-6 bg-white/95 backdrop-blur-lg border border-white/40 rounded-2xl shadow-xl flex flex-col gap-4 text-base font-medium text-neutral-600 lg:hidden animate-in fade-in slide-in-from-top-4 duration-200">
+            <Link href="/" className={`transition-colors py-2 border-b border-neutral-100 ${isActive('/') ? 'text-orange-500 font-semibold' : 'hover:text-orange-500'}`}>Home</Link>
+            <Link href="/menue" className={`transition-colors py-2 border-b border-neutral-100 ${isActive('/menue') ? 'text-orange-500 font-semibold' : 'hover:text-orange-500'}`}>Menu</Link>
+            <Link href="/reserve" className={`transition-colors py-2 border-b border-neutral-100 ${isActive('/reserve') ? 'text-orange-500 font-semibold' : 'hover:text-orange-500'}`}>Reservation</Link>
+            <Link href="/contact" className={`transition-colors py-2 ${isActive('/contact') ? 'text-orange-500 font-semibold' : 'hover:text-orange-500'}`}>Contact</Link>
+            
+            {isAdmin && (
+              <Link href="/admin" className={`transition-colors text-red-500 font-bold flex items-center gap-1.5 py-2 border-t border-neutral-100 ${isActive('/admin') ? 'text-red-600' : 'hover:text-red-600'}`}>
+                <ShieldAlert size={16}/> Console
+              </Link>
+            )}
+
+            {/* Auth Button Fallback inside mobile container for small screen widths */}
+            <div className="sm:hidden pt-2 border-t border-neutral-100">
+              {isLoggedIn ? (
+                <button onClick={handleLogout} className="w-full justify-center bg-neutral-900 text-white px-4 py-3 rounded-xl text-sm font-semibold shadow-sm hover:bg-red-600 transition-all flex items-center gap-2">
+                  <LogOut size={14}/> Logout
+                </button>
+              ) : (
+                <Link href="/sign" className="w-full text-center bg-neutral-900 text-white px-5 py-3 rounded-xl text-sm font-semibold shadow-sm hover:bg-neutral-800 transition-all block">
+                  Sign In
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
       </nav>
     </header>
   );
