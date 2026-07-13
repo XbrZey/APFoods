@@ -7,6 +7,7 @@ from database import engine, Base
 
 app = FastAPI(title="A&P Foods Pipeline API")
 
+# Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -18,6 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Exception Handler
 @app.exception_handler(Exception)
 async def unhandled_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
@@ -25,6 +27,12 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
         content={"detail": f"Internal server error: {exc}"},
     )
 
+# Routes
+@app.get("/cornjob")
+async def cornjob():
+    return {"message": "hello"}
+
+# Include Routers
 app.include_router(general_router)
 app.include_router(auth_router)
 
