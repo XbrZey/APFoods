@@ -186,21 +186,6 @@ export default function MainPage() {
               className="w-full h-full object-cover object-center transform hover:scale-110 transition-transform duration-700"
             />
           </div>
-
-          
-          <div className="hero-float-card absolute bottom-2 -left-2 sm:left-6 bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-neutral-100 max-w-[210px] flex items-center gap-3">
-            <img 
-              alt="Fresh vegetable salad, close up"
-              className="w-12 h-12 rounded-xl object-cover"
-            />
-            <div>
-              <h3 className="text-xs font-bold text-neutral-800">Hot Pick!</h3>
-              <div className="flex gap-0.5 my-0.5">
-                {[...Array(5)].map((_, i) => <Star key={i} size={10} fill="#f97316" color="#f97316" />)}
-              </div>
-              <p className="text-xs font-black text-neutral-900">Rs.240</p>
-            </div>
-          </div>
         </div>
       </section>
 
