@@ -129,7 +129,13 @@ export default function MainPage() {
   };
 
   return (
-    <main ref={containerRef} className="w-full max-w-7xl mx-auto px-6 py-8 space-y-28 overflow-hidden">
+    <main 
+      ref={containerRef} 
+      className="w-full max-w-7xl mx-auto px-6 py-8 space-y-28 overflow-hidden relative bg-gradient-to-br from-stone-50 via-orange-50/10 to-amber-50/20 rounded-3xl border border-neutral-100/50 shadow-inner"
+    >
+      {/* Absolute high-end aesthetic ambient glows under the content layout */}
+      <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-orange-200/20 blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-amber-100/20 blur-[130px] pointer-events-none -z-10" />
 
       
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative pt-4">
@@ -183,17 +189,16 @@ export default function MainPage() {
 
           
           <div className="hero-float-card absolute bottom-2 -left-2 sm:left-6 bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-neutral-100 max-w-[210px] flex items-center gap-3">
-            <img
-              src="/images/hero-salad.jpg" 
+            <img 
               alt="Fresh vegetable salad, close up"
               className="w-12 h-12 rounded-xl object-cover"
             />
             <div>
-              <h4 className="text-xs font-bold text-neutral-800">Garden Salad</h4>
+              <h3 className="text-xs font-bold text-neutral-800">Hot Pick!</h3>
               <div className="flex gap-0.5 my-0.5">
                 {[...Array(5)].map((_, i) => <Star key={i} size={10} fill="#f97316" color="#f97316" />)}
               </div>
-              <p className="text-xs font-black text-neutral-900">NRP 240</p>
+              <p className="text-xs font-black text-neutral-900">Rs.240</p>
             </div>
           </div>
         </div>

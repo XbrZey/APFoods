@@ -159,7 +159,11 @@ export default function MainMenu() {
   }, { scope: containerRef });
 
   return (
-    <main ref={containerRef} className="w-full max-w-7xl mx-auto px-6 py-12 space-y-12 select-none">
+    <main ref={containerRef} className="w-full max-w-7xl mx-auto px-6 py-12 space-y-12 select-none relative overflow-hidden">
+      
+      {/* Absolute high-end aesthetic ambient glows under the layout (doesn't change card sizes or wrap DOM) */}
+      <div className="absolute top-[-10%] right-[-15%] w-[600px] h-[600px] rounded-full bg-orange-100/30 blur-[130px] pointer-events-none -z-10" />
+      <div className="absolute bottom-[-10%] left-[-15%] w-[700px] h-[700px] rounded-full bg-amber-50/40 blur-[150px] pointer-events-none -z-10" />
       
       
       <div className="text-center max-w-xl mx-auto space-y-4">
