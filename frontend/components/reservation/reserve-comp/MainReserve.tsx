@@ -99,7 +99,7 @@ export default function MainReserve() {
 
       <div className="animate-header text-center max-w-xl mx-auto space-y-4 relative z-10">
         <h1 className="text-4xl font-black text-neutral-900">
-          Book Your <span className="text-orange-500">Space</span>
+          Book Your <span className="text-green-700">Space</span>
         </h1>
       </div>
 
@@ -170,7 +170,7 @@ export default function MainReserve() {
                       onClick={() => setTimeSlot(time)}
                       className={`py-3 px-4 border rounded-xl text-xs font-bold transition-all block w-full text-center ${
                         isSelected
-                          ? 'border-orange-500 text-orange-600 bg-orange-50 font-black ring-2 ring-orange-500/20'
+                          ? 'border-green-700 text-green-700 bg-orange-50 font-black ring-2 ring-orange-500/20'
                           : 'border-neutral-200 text-neutral-600 bg-white/50 hover:border-neutral-400 hover:bg-white'
                       }`}
                     >
@@ -187,7 +187,7 @@ export default function MainReserve() {
             </div>
 
             <div className="md:col-span-2 pt-2">
-              <button type="submit" className="w-full bg-orange-500 text-white py-4 rounded-xl font-bold hover:bg-orange-600 transition-colors text-sm shadow-md shadow-orange-500/20">
+              <button type="submit" className="w-full bg-green-700 text-white py-4 rounded-xl font-bold hover:bg-orange-600 transition-colors text-sm shadow-md shadow-orange-500/20">
                 Confirm Your Space
               </button>
             </div>

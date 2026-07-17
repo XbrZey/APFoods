@@ -149,11 +149,11 @@ export default function MainContact() {
       <div className="blob-2 absolute -bottom-20 -right-20 w-96 h-96 bg-amber-100/30 rounded-full blur-3xl pointer-events-none -z-10" />
 
       <div className="animate-header text-center max-w-xl mx-auto space-y-4">
-        <span className="text-orange-500 font-bold tracking-wider text-xs uppercase bg-orange-50 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
+        <span className="text-green-700 font-bold tracking-wider text-xs uppercase bg-orange-50 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
           <Sparkles size={12} /> Hospitality & Flavors
         </span>
         <h1 className="text-4xl md:text-5xl font-black text-neutral-900 tracking-tight leading-[1.15]">
-          Connect with Our <span className="text-orange-500">Kitchen Staff</span>
+          Connect with Our <span className="text-green-700">Kitchen Staff</span>
         </h1>
       </div>
 
@@ -161,7 +161,7 @@ export default function MainContact() {
         {/* Sidebar Info */}
         <div className="lg:col-span-4 flex flex-col justify-between gap-6">
           <div className="animate-card flex-1 bg-white rounded-3xl p-6 border border-neutral-200 shadow-sm flex items-start gap-4 hover:border-orange-300 transition-colors">
-            <div className="bg-orange-50 text-orange-600 p-3 rounded-xl shrink-0"><Phone size={18} /></div>
+            <div className="bg-orange-50 text-green-700 p-3 rounded-xl shrink-0"><Phone size={18} /></div>
             <div>
               <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Call the Kitchen</h4>
               <p className="text-sm font-bold text-neutral-800 mt-1">+977 (01) 4412345</p>
@@ -169,7 +169,7 @@ export default function MainContact() {
           </div>
 
           <div className="animate-card flex-1 bg-white rounded-3xl p-6 border border-neutral-200 shadow-sm flex items-start gap-4 hover:border-orange-300 transition-colors">
-            <div className="bg-orange-50 text-orange-600 p-3 rounded-xl shrink-0"><Mail size={18} /></div>
+            <div className="bg-orange-50 text-red-700 p-3 rounded-xl shrink-0"><Mail size={18} /></div>
             <div>
               <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Catering & Events</h4>
               <p className="text-sm font-bold text-neutral-800 mt-1">namaste@foodie.com</p>
@@ -177,7 +177,7 @@ export default function MainContact() {
           </div>
 
           <div className="animate-card flex-1 bg-white rounded-3xl p-6 border border-neutral-200 shadow-sm flex items-start gap-4 hover:border-orange-300 transition-colors">
-            <div className="bg-orange-50 text-orange-600 p-3 rounded-xl shrink-0"><MapPin size={18} /></div>
+            <div className="bg-orange-50 text-red-700 p-3 rounded-xl shrink-0"><MapPin size={18} /></div>
             <div>
               <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Find Our Tables</h4>
               <p className="text-sm font-bold text-neutral-800 mt-1">Jhamsikhel-03, Lalitpur</p>
@@ -190,7 +190,7 @@ export default function MainContact() {
           {!isSubmitted ? (
             <form onSubmit={handleInitialSubmit} className="space-y-6 h-full flex flex-col justify-between flex-1">
               <h3 className="text-lg font-black text-neutral-900 flex items-center gap-2">
-                <MessageSquare size={18} className="text-orange-500" /> Share Your Culinary Inquiry
+                <MessageSquare size={18} className="text-green-700" /> Share Your Culinary Inquiry
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -243,7 +243,7 @@ export default function MainContact() {
               </div>
 
               <div className="pt-2">
-                <button type="submit" className="w-full sm:w-auto bg-orange-500 text-white px-8 py-4 rounded-xl font-bold shadow-md hover:bg-orange-600 transition-all text-sm">
+                <button type="submit" className="w-full sm:w-auto bg-green-700 text-white px-8 py-4 rounded-xl font-bold shadow-md hover:bg-orange-600 transition-all text-sm">
                   Send Message to Kitchen
                 </button>
               </div>
@@ -255,7 +255,7 @@ export default function MainContact() {
                   <CheckCircle2 size={16} className="text-green-500" />
                   <span className="text-sm font-black">Live Concierge Pipeline Active</span>
                 </div>
-                <span className="text-[10px] bg-orange-50 text-orange-600 font-bold px-2 py-0.5 rounded-full">Logged as: {name}</span>
+                <span className="text-[10px] bg-orange-50 text-green-700 font-bold px-2 py-0.5 rounded-full">Logged as: {name}</span>
               </div>
 
               <div className="flex-1 overflow-y-auto py-4 space-y-3 flex flex-col min-h-[220px]">
@@ -265,7 +265,7 @@ export default function MainContact() {
                     <div
                       key={idx}
                       className={`max-w-[80%] p-3 rounded-2xl text-xs leading-relaxed shadow-sm ${
-                        isUser ? 'bg-orange-500 text-white rounded-br-none self-end' : 'bg-neutral-100 text-neutral-800 rounded-bl-none self-start'
+                        isUser ? 'bg-green-700 text-white rounded-br-none self-end' : 'bg-neutral-100 text-neutral-800 rounded-bl-none self-start'
                       }`}
                     >
                       <p>{msg.message}</p>

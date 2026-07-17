@@ -123,7 +123,7 @@ export default function AdminMain() {
   if (isAuthorized === null) {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center font-['Plus_Jakarta_Sans']">
-        <div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-orange-500/30 border-t-green-700 rounded-full animate-spin" />
       </div>
     );
   }
@@ -226,11 +226,11 @@ export default function AdminMain() {
         <div className="tab-content-panel space-y-8">
           <div className="flex items-center justify-between gap-4">
             <div className="flex flex-col gap-2">
-              <span className="text-orange-500 font-bold tracking-wider text-xs uppercase bg-orange-50 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 w-fit">
+              <span className="text-green-700 font-bold tracking-wider text-xs uppercase bg-orange-50 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 w-fit">
                 <Sparkles size={12} /> Management Console
               </span>
               <h1 className="text-3xl md:text-4xl font-black text-neutral-900 tracking-tight capitalize">
-                {activeTab} <span className="text-orange-500">Dashboard</span>
+                {activeTab} <span className="text-green-700">Dashboard</span>
               </h1>
             </div>
           </div>
@@ -257,7 +257,7 @@ export default function AdminMain() {
                       const isSelected = sessionId === activeSessionId;
                       return (
                         <button key={sessionId} type="button" onClick={() => setActiveSessionId(sessionId)} className={`w-full text-left p-3 rounded-xl flex items-center gap-3 transition-all ${isSelected ? 'bg-white border border-neutral-200 shadow-sm' : 'hover:bg-neutral-100/70'}`}>
-                          <div className="bg-orange-100 text-orange-600 p-2 rounded-lg"><User size={14} /></div>
+                          <div className="bg-orange-100 text-green-700 p-2 rounded-lg"><User size={14} /></div>
                           <div className="min-w-0 flex-1">
                             <h4 className="font-bold text-neutral-800 text-xs truncate">{latestMsg.name}</h4>
                             <p className="text-[11px] text-neutral-400 truncate mt-0.5">{latestMsg.message}</p>
@@ -272,7 +272,7 @@ export default function AdminMain() {
                       <>
                         <div className="p-4 border-b border-neutral-100 bg-neutral-50/40 flex items-center justify-between">
                           <span className="text-xs font-bold text-neutral-800 flex items-center gap-1.5">
-                            Conversation Thread: <span className="text-orange-500">{currentChatHistory[0]?.name}</span>
+                            Conversation Thread: <span className="text-green-700">{currentChatHistory[0]?.name}</span>
                           </span>
                           <span className="text-[10px] bg-neutral-200/60 font-mono text-neutral-500 px-2 py-0.5 rounded">
                             ID: {activeSessionId.slice(0, 8)}
@@ -292,7 +292,7 @@ export default function AdminMain() {
 
                         <form onSubmit={handleSendReply} className="p-3 border-t border-neutral-100 flex items-center gap-2 bg-neutral-50/30">
                           <input type="text" value={replyText} onChange={(e) => setReplyText(e.target.value)} placeholder="Type an official response..." className="flex-1 bg-white text-xs border border-neutral-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-400 text-neutral-800" />
-                          <button type="submit" className="p-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-colors shrink-0"><Send size={14} /></button>
+                          <button type="submit" className="p-3 bg-green-700 hover:bg-green-700 text-white rounded-xl transition-colors shrink-0"><Send size={14} /></button>
                         </form>
                       </>
                     ) : (
@@ -327,7 +327,7 @@ export default function AdminMain() {
 
                       {res.special_requests && (
                         <div className="md:max-w-xs bg-orange-50/60 p-3 rounded-xl border border-orange-100 text-left">
-                          <span className="text-[10px] font-bold text-orange-600 uppercase block mb-1">Guest Note</span>
+                          <span className="text-[10px] font-bold text-green-700 uppercase block mb-1">Guest Note</span>
                           <p className="text-xs text-neutral-600 leading-normal">{res.special_requests}</p>
                         </div>
                       )}
@@ -347,7 +347,7 @@ export default function AdminMain() {
       <aside className="animate-sidebar w-64 md:w-72 bg-white border-l border-neutral-200 flex flex-col justify-between p-6 shadow-sm shrink-0">
         <div className="space-y-8">
           <div className="flex items-center gap-3 px-2">
-            <div className="bg-orange-500 text-white p-2 rounded-xl shadow-lg shadow-orange-500/20"><LayoutDashboard size={20} /></div>
+            <div className="bg-green-700 text-white p-2 rounded-xl shadow-lg shadow-orange-500/20"><LayoutDashboard size={20} /></div>
             <div>
               <h2 className="font-black text-neutral-900 text-base tracking-tight">Himalayan Hub</h2>
               <span className="text-[10px] text-neutral-400 font-bold tracking-widest uppercase">Admin Panel</span>
@@ -356,7 +356,7 @@ export default function AdminMain() {
 
           <nav className="space-y-2">
             {(['messages', 'reservations'] as AdminTab[]).map((tab) => (
-              <button key={tab} type="button" onClick={() => handleTabChange(tab)} className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-xs font-bold tracking-wide transition-all group ${activeTab === tab ? 'bg-orange-500 text-white shadow-xl shadow-orange-500/20' : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900'}`}>
+              <button key={tab} type="button" onClick={() => handleTabChange(tab)} className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-xs font-bold tracking-wide transition-all group ${activeTab === tab ? 'bg-green-700 text-white shadow-xl shadow-orange-500/20' : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900'}`}>
                 <div className="flex items-center gap-3">
                   {tab === 'messages' && <MessageSquare size={16} />}
                   {tab === 'reservations' && <CalendarCheck size={16} />}
