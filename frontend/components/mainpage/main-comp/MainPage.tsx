@@ -421,18 +421,6 @@ export default function MainPage() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* Trust strip                                                      */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="stats-strip grid grid-cols-2 sm:grid-cols-4 gap-6 border-y border-[#E3DAC4] py-10 relative z-10">
-        {STATS.map((stat) => (
-          <div key={stat.label} className="stat-item text-center space-y-1">
-            <p className="text-3xl sm:text-4xl font-black text-[#2B2214]">{stat.value}</p>
-            <p className="text-xs font-bold text-[#7A6F53] uppercase tracking-widest">{stat.label}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* ---------------------------------------------------------------- */}
       {/* Popular dishes                                                    */}
       {/* ---------------------------------------------------------------- */}
       <section className="space-y-12 relative z-10">
@@ -477,6 +465,34 @@ export default function MainPage() {
           ))}
         </div>
       </section>
+
+           {/* ---------------------------------------------------------------- */}
+      {/* Closing CTA                                                      */}
+      {/* ---------------------------------------------------------------- */}
+      <section className="bg-[#241A0F] rounded-[2.5rem] px-10 py-14 sm:py-20 text-center space-y-6 relative overflow-hidden z-10">
+        <div className="absolute top-[-40%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-emerald-700/20 blur-[140px] pointer-events-none" />
+        <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight relative">
+          Hungry Already?
+        </h2>
+        <p className="text-[#CFC3A8] max-w-md mx-auto relative">
+          Reserve a table for tonight, or reach out if you're planning something bigger.
+        </p>
+        <div className="flex flex-wrap justify-center gap-4 relative">
+          <Link
+            href="/reserve"
+            className="bg-emerald-700 text-white px-9 py-4 rounded-2xl font-bold shadow-lg shadow-emerald-900/20 hover:bg-emerald-600 transition-all text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#241A0F]"
+          >
+            Reserve a Table
+          </Link>
+          <Link
+            href="/contact"
+            className="border-2 border-white/20 text-white px-9 py-4 rounded-2xl font-bold hover:bg-white/10 transition-all text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#241A0F]"
+          >
+            Contact Us
+          </Link>
+        </div>
+      </section>
+      
 
       {/* ---------------------------------------------------------------- */}
       {/* Why APFoods                                                      */}
@@ -538,32 +554,19 @@ export default function MainPage() {
         </div>
       </section>
 
+
       {/* ---------------------------------------------------------------- */}
-      {/* Closing CTA                                                      */}
+      {/* Trust strip                                                      */}
       {/* ---------------------------------------------------------------- */}
-      <section className="bg-[#241A0F] rounded-[2.5rem] px-10 py-14 sm:py-20 text-center space-y-6 relative overflow-hidden z-10">
-        <div className="absolute top-[-40%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-emerald-700/20 blur-[140px] pointer-events-none" />
-        <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight relative">
-          Hungry Already?
-        </h2>
-        <p className="text-[#CFC3A8] max-w-md mx-auto relative">
-          Reserve a table for tonight, or reach out if you're planning something bigger.
-        </p>
-        <div className="flex flex-wrap justify-center gap-4 relative">
-          <Link
-            href="/reserve"
-            className="bg-emerald-700 text-white px-9 py-4 rounded-2xl font-bold shadow-lg shadow-emerald-900/20 hover:bg-emerald-600 transition-all text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#241A0F]"
-          >
-            Reserve a Table
-          </Link>
-          <Link
-            href="/contact"
-            className="border-2 border-white/20 text-white px-9 py-4 rounded-2xl font-bold hover:bg-white/10 transition-all text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#241A0F]"
-          >
-            Contact Us
-          </Link>
-        </div>
+      <section className="stats-strip grid grid-cols-2 sm:grid-cols-4 gap-6 border-y border-[#E3DAC4] py-10 relative z-10">
+        {STATS.map((stat) => (
+          <div key={stat.label} className="stat-item text-center space-y-1">
+            <p className="text-3xl sm:text-4xl font-black text-[#2B2214]">{stat.value}</p>
+            <p className="text-xs font-bold text-[#7A6F53] uppercase tracking-widest">{stat.label}</p>
+          </div>
+        ))}
       </section>
+
     </main>
   );
 }
