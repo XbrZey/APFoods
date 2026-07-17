@@ -387,10 +387,10 @@ export default function MainPage() {
               Reserve a Table
             </Link>
             <Link
-              href="/contact"
+              href="/menue"
               className="border-2 border-[#D9CBAB] bg-white/40 backdrop-blur-sm text-[#2B2214] px-9 py-4 rounded-2xl font-bold hover:bg-[#F3EFDF] hover:border-[#C9B98C] transition-all text-sm block text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B2214] focus-visible:ring-offset-2"
             >
-              Contact Us
+              Our Menue
             </Link>
           </div>
           <div className="hero-sub-stagger text-xs font-bold text-[#7A6F53] flex items-center gap-2.5 pt-3">
