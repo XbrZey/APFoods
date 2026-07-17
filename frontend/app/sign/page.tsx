@@ -103,7 +103,7 @@ export default function AuthPage() {
             <Sparkles size={11} /> Guest Portals
           </span>
           <h1 className="text-2xl font-black text-neutral-900 tracking-tight">
-            {mode === 'signin' ? 'Welcome Back to' : 'Join'} <span className="text-green-700">Mint&Moss</span>
+            {mode === 'signin' ? 'Welcome Back to' : 'Join'} <span className="text-green-700">Mint & Moss</span>
           </h1>
           <p className="text-xs text-neutral-400">
             {mode === 'signin' ? 'Enter credentials to manage active culinary tables' : 'Create an account to track your orders and spaces'}
