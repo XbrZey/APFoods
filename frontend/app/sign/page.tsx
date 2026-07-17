@@ -99,11 +99,11 @@ export default function AuthPage() {
         
         {/* Upper Title Identity Block */}
         <div className="text-center space-y-2">
-          <span className="text-orange-500 font-bold tracking-wider text-[10px] uppercase bg-orange-50 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 mx-auto">
+          <span className="text-green-700 font-bold tracking-wider text-[10px] uppercase bg-orange-50 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 mx-auto">
             <Sparkles size={11} /> Guest Portals
           </span>
           <h1 className="text-2xl font-black text-neutral-900 tracking-tight">
-            {mode === 'signin' ? 'Welcome Back to' : 'Join'} <span className="text-orange-500">APFoods</span>
+            {mode === 'signin' ? 'Welcome Back to' : 'Join'} <span className="text-green-700">APFoods</span>
           </h1>
           <p className="text-xs text-neutral-400">
             {mode === 'signin' ? 'Enter credentials to manage active culinary tables' : 'Create an account to track your orders and spaces'}
@@ -119,14 +119,14 @@ export default function AuthPage() {
           <button 
             type="button" 
             onClick={() => handleModeToggle('signin', 0)} 
-            className={`flex-1 py-3 text-xs font-black relative z-10 text-center transition-colors ${mode === 'signin' ? 'text-orange-600' : 'text-neutral-500'}`}
+            className={`flex-1 py-3 text-xs font-black relative z-10 text-center transition-colors ${mode === 'signin' ? 'text-green-700' : 'text-neutral-500'}`}
           >
             Sign In
           </button>
           <button 
             type="button" 
             onClick={() => handleModeToggle('signup', 1)} 
-            className={`flex-1 py-3 text-xs font-black relative z-10 text-center transition-colors ${mode === 'signup' ? 'text-orange-600' : 'text-neutral-500'}`}
+            className={`flex-1 py-3 text-xs font-black relative z-10 text-center transition-colors ${mode === 'signup' ? 'text-green-700' : 'text-neutral-500'}`}
           >
             Create Account
           </button>
@@ -161,7 +161,7 @@ export default function AuthPage() {
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Rohan Adhikari" 
                   required={mode === 'signup'}
-                  className="w-full pl-11 pr-4 py-3.5 bg-neutral-50/50 border border-neutral-200 rounded-xl text-xs text-neutral-800 focus:outline-none focus:border-orange-500 focus:bg-white transition-all font-medium"
+                  className="w-full pl-11 pr-4 py-3.5 bg-neutral-50/50 border border-neutral-200 rounded-xl text-xs text-neutral-800 focus:outline-none focus:border-green-600 focus:bg-white transition-all font-medium"
                 />
               </div>
             </div>
@@ -177,7 +177,7 @@ export default function AuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="rohan@example.com" 
                 required 
-                className="w-full pl-11 pr-4 py-3.5 bg-neutral-50/50 border border-neutral-200 rounded-xl text-xs text-neutral-800 focus:outline-none focus:border-orange-500 focus:bg-white transition-all font-medium"
+                className="w-full pl-11 pr-4 py-3.5 bg-neutral-50/50 border border-neutral-200 rounded-xl text-xs text-neutral-800 focus:outline-none focus:border-green-600 focus:bg-white transition-all font-medium"
               />
             </div>
           </div>
@@ -192,14 +192,14 @@ export default function AuthPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••" 
                 required 
-                className="w-full pl-11 pr-4 py-3.5 bg-neutral-50/50 border border-neutral-200 rounded-xl text-xs text-neutral-800 focus:outline-none focus:border-orange-500 focus:bg-white transition-all font-medium"
+                className="w-full pl-11 pr-4 py-3.5 bg-neutral-50/50 border border-neutral-200 rounded-xl text-xs text-neutral-800 focus:outline-none focus:border-green-600 focus:bg-white transition-all font-medium"
               />
             </div>
           </div>
 
           {mode === 'signin' && (
             <div className="text-right animate-input">
-              <button type="button" className="text-[11px] font-bold text-orange-500 hover:underline">
+              <button type="button" className="text-[11px] font-bold text-green-700 hover:underline">
                 Forgot password?
               </button>
             </div>
@@ -209,7 +209,7 @@ export default function AuthPage() {
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-xl font-bold transition-all shadow-md shadow-orange-500/10 flex items-center justify-center gap-2 text-xs active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
+              className="w-full bg-green-700 hover:bg-green-700 text-white py-4 rounded-xl font-bold transition-all shadow-md shadow-orange-500/10 flex items-center justify-center gap-2 text-xs active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
             >
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
